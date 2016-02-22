@@ -3,9 +3,25 @@ import scrapy
 from retail_locations.items import RetailLocationsItem
 
 class YellowPagesSpider(scrapy.Spider):
+    
     name = "yellow_pages"
     allowed_domains = ["www.yellowpages.com",]
-    start_urls = ["http://www.yellowpages.com/search?search_terms=Urban+Outfitters&geo_location_terms=CA",]
+    
+    cos = ["Urban Outfitters",]
+    cos = [c.replace(" ", "+") for c in cos]
+    
+    us_states = ['AL','AK','AS','AZ','AR','CA','CO','CT','DE','DC','FL','GA','GU','HI',
+                 'ID','IL','IN','IA','KS','KY','LA','ME','MD','MH','MA','MI','FM','MN',
+                 'MS','MO','MT','NE','NV','NH','NJ','NM','NY','NC','ND','MP','OH','OK',
+                 'OR','PW','PA','PR','RI','SC','SD','TN','TX','UT','VT','VA','VI','WA',
+                 'WV','WI','WY',]
+    
+    base_url = "http://www.yellowpages.com/search?search_terms={0}&geo_location_terms={1}"
+    start_urls = []
+    for co in cos:
+        for state in us_states:
+            start_urls.append(base_url.format(co, state))
+    
 
     def parse(self, response):
 
